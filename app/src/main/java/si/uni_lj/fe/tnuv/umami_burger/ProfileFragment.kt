@@ -12,6 +12,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import si.uni_lj.fe.tnuv.umami_burger.MyApp.Companion.auth
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -57,7 +58,7 @@ class ProfileFragment : Fragment() {
         signoutButton = view.findViewById(R.id.btnSignout)
 
         signoutButton.setOnClickListener {
-            Firebase.auth.signOut()
+            auth.signOut()
         }
 
         // Inflate the layout for this fragment
