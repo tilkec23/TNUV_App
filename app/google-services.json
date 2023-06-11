@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "343079925499",
+    "firebase_url": "https://umami-burger-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "umami-burger",
+    "storage_bucket": "umami-burger.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343079925499:android:05109f7fe8e4872ff2e25e",
+        "android_client_info": {
+          "package_name": "si.uni_lj.fe.tnuv.umami_burger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "343079925499-jr18fo0hmcncjict49l80oofshnghilq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9WNVFwmmceurFGi1kRYlEQwkN_TaEm18"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "343079925499-jr18fo0hmcncjict49l80oofshnghilq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

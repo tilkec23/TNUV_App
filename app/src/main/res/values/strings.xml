@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">umami_burger</string>
+    <string name="napaka_omrezje">Omrežje ni na voljo.</string>
+    <string name="napaka_povezava">Vzpostavitev povezave s strežnikom ni uspela.</string>
+    <string name="urlNaslov">http://www.lait.fe.uni-lj.si/gradiva/tnuv/contacts.json</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="empty_feed">Your feed is empty</string>
+    <string name="empty_feed_description">Try adding friends or create a post!</string>
+    <string name="Login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="looking_for_register">Don\'t have an account yet? Register here!</string>
+    <string name="Register">Register</string>
+    <string name="looking_for_login">Already have an account? Click here to log in!</string>
+    <string name="confirm_password">Re-enter your password</string>
+    <string name="Sign_Out">Sign out</string>
+</resources>
