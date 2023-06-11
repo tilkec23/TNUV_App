@@ -11,8 +11,10 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.textfield.TextInputEditText
+import com.google.common.hash.Hashing
 import com.google.firebase.auth.FirebaseUser
 import si.uni_lj.fe.tnuv.umami_burger.MyApp.Companion.auth
+import java.nio.charset.StandardCharsets
 
 /**
  * A simple [Fragment] subclass.
@@ -80,7 +82,7 @@ class LoginFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            signInWithEmail(enteredText, enteredPassword)
+            signInWithEmail(enteredText, hashPassword(enteredPassword))
 
         }
 
@@ -133,6 +135,12 @@ class LoginFragment : Fragment() {
                     // updateUI(null)
                 }
             }
+    }
+    private fun hashPassword(password: String): String {
+        // no need to salt I guess
+        return Hashing.sha256()
+            .hashString(password, StandardCharsets.UTF_8)
+            .toString()
     }
 
 
