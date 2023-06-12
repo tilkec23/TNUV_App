@@ -10,7 +10,7 @@
         android:icon="@drawable/location"
         android:title="Nearby" />
     <item
-        android:id="@+id/placeholder"
+        android:id="@+id/nav_new_post"
         android:title="" />
     <item
         android:id="@+id/nav_notifications"

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/background_color"
+    >
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop" />
+
+    <EditText
+        android:id="@+id/burgerNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Type the burger name"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/burgerPlaceEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Where did you eat the burger?"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/burgerPriceEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="How much did you pay for the burger?"
+        android:inputType="numberDecimal" />
+
+    <EditText
+        android:id="@+id/burgerPattyRatingEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="How would you rate the patty? (1-10)"
+
+        android:inputType="number" />
+    <EditText
+        android:id="@+id/burgerVeggiesRatingEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="How would you rate the veggies? (1-10)"
+
+        android:inputType="number" />
+    <EditText
+        android:id="@+id/burgerSauceRatingEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="How would you rate the sauce? (1-10)"
+
+        android:inputType="number" />
+    <EditText
+        android:id="@+id/burgerOverallRatingEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="How would you rate the burger overall? (1-10)"
+
+        android:inputType="number" />
+
+
+</LinearLayout>

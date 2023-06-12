@@ -15,4 +15,7 @@
     <string name="looking_for_login">Already have an account? Click here to log in!</string>
     <string name="confirm_password">Re-enter your password</string>
     <string name="Sign_Out">Sign out</string>
+    <string name="Back">Back</string>
+    <string name="Take_a_Photo">Take a photo</string>
+    <string name="Choose_from_Gallery">Choose from gallery</string>
 </resources>

@@ -136,7 +136,13 @@ class LoginFragment : Fragment() {
                         .commit()
                 } else {
                     Log.w("TAG", "signInWithEmail:failure", task.exception)
-                    Toast.makeText(requireContext(), "Authentication failed.", Toast.LENGTH_SHORT).show()
+                    // Handle error and show it to user
+                    var errorMessage = "Authentication failed."
+                    if (task.exception != null) {
+                        errorMessage = task.exception!!.message.toString()
+                    }
+
+                    Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
                     // updateUI(null)
                 }
             }
