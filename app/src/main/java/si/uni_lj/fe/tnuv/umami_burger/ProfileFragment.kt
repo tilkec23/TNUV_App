@@ -59,10 +59,15 @@ class ProfileFragment : Fragment() {
 
         signoutButton.setOnClickListener {
             auth.signOut()
+            // After signing out, navigate the user back to the login screen
+            val loginFragment = LoginFragment.newInstance("", "")  // replace with your parameters
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.frame_layout, loginFragment)  // replace with your container view ID
+                .commit()
         }
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

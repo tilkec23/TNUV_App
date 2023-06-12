@@ -129,6 +129,11 @@ class LoginFragment : Fragment() {
                     Log.d("TAG", "signInWithEmail:success")
                     val user = auth.currentUser
                     // Here you could use a method updateUI(user) as in your original function
+                    // Switch to the profile fragment
+                    val profileFragment = ProfileFragment.newInstance("", "")  // replace with your parameters
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.frame_layout, profileFragment)  // replace with your container view ID
+                        .commit()
                 } else {
                     Log.w("TAG", "signInWithEmail:failure", task.exception)
                     Toast.makeText(requireContext(), "Authentication failed.", Toast.LENGTH_SHORT).show()

@@ -5,7 +5,7 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.google.firebase.auth.FirebaseAuth
+import si.uni_lj.fe.tnuv.umami_burger.MyApp.Companion.auth
 import si.uni_lj.fe.tnuv.umami_burger.databinding.ActivityMainBinding
 
 
@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityMainBinding
 
-    private lateinit var auth: FirebaseAuth
+
 
 
 
@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        auth = MyApp.auth
+
 
         replaceFragment(Welcome())
 
@@ -31,7 +31,8 @@ class MainActivity : AppCompatActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         window.statusBarColor = ContextCompat.getColor(this, R.color.status_bar_color)
 
-        val currentUser = auth.currentUser
+
+
 
 
 
@@ -43,6 +44,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_profile -> {
                     binding.bottomNavigationView.menu.setGroupCheckable(0, true, true)
+                    val currentUser = auth.currentUser // retrieve the current user here
                     if (currentUser == null) {
                         replaceFragment(LoginFragment())
                     } else
