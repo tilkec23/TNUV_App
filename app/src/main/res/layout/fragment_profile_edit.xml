@@ -19,12 +19,13 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:scaleType="fitCenter"
-
+            android:clickable="true"
             android:src="@drawable/background_clouds" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@drawable/back"
             >
             <Button
                 android:layout_alignParentRight="true"
@@ -42,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/btnSignout"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="160dp"
+                android:layout_marginTop="120dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/back">
@@ -56,6 +57,7 @@
                     android:layout_marginTop="16dp"
                     android:background="@color/light_grey"
                     app:layout_constraintStart_toStartOf="parent"
+                    android:src="@drawable/add_photo_alternate_black_24dp"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <LinearLayout
@@ -69,8 +71,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/avatar_image_view">
 
-                    <TextView
-                        android:id="@+id/display_name_text_view"
+                    <EditText
+                        android:id="@+id/display_name_edit_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -79,34 +81,50 @@
                         android:textColor="@color/light_grey"
                         android:textSize="30dp"
                         android:textStyle="bold"
-                        tools:text="Steve Jobsn't" />
+                        android:inputType="text"
+                        tools:text="Steve Jobsn't"
+                        android:hint="@string/inputYourName"/>
 
                     <TextView
                         android:id="@+id/post_time_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
-                        android:maxLines="1"
-                        tools:text="Posted on 8:34 PM,  25 March 2023" />
+                        android:maxLines="2"
+                        android:textSize="12dp"
+                        android:text="Account created on 8:34 PM,  10th June 2023 "
+                        android:textColor="@color/light_grey"/>
 
-                    <TextView
-                        android:id="@+id/description_textview"
-                        android:layout_width="wrap_content"
+                    <EditText
+                        android:id="@+id/description_edit_text"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
                         android:textColor="@color/light_grey"
                         android:textStyle="bold"
+                        android:inputType="textMultiLine"
+                        android:background="@null"
+                        android:hint="@string/inputYourDescription"
                         tools:text="Brian Marty : my favourite place on earth" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="x/120"
+                        android:textColor="@color/successful">
+
+                    </TextView>
+
                     <Button
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:background="@drawable/baseline_edit_24"
+                        android:background="@drawable/baseline_check_24"
                         android:layout_marginTop="10dp"
-                        android:layout_marginRight="16dp"
+                        android:layout_marginRight="10dp"
                         android:layout_marginBottom="10dp"
                         android:id="@+id/btnEditProfile"
                         android:layout_gravity="end"
+                        android:padding="30dp"
 
                         >
 

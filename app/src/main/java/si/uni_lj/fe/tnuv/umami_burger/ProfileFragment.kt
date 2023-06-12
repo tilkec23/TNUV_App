@@ -21,6 +21,7 @@ import si.uni_lj.fe.tnuv.umami_burger.MyApp.Companion.auth
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 private lateinit var signoutButton: Button
+private lateinit var btnEditProfile: Button
 
 /**
  * A simple [Fragment] subclass.
@@ -61,6 +62,7 @@ class ProfileFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
 
         signoutButton = view.findViewById(R.id.btnSignout)
+        btnEditProfile = view.findViewById<Button>(R.id.btnEditProfile)
 
         signoutButton.setOnClickListener {
             auth.signOut()
@@ -68,6 +70,13 @@ class ProfileFragment : Fragment() {
             val loginFragment = LoginFragment.newInstance("", "")  // replace with your parameters
             parentFragmentManager.beginTransaction()
                 .replace(R.id.frame_layout, loginFragment)  // replace with your container view ID
+                .commit()
+        }
+        btnEditProfile.setOnClickListener {
+            val profileEditFragment = ProfileEditFragment.newInstance("","")  // replace with your parameters if any
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.frame_layout, profileEditFragment, "ProfileEditFragment")  // replace with your container view ID
+                .addToBackStack("ProfileEditFragment")
                 .commit()
         }
 

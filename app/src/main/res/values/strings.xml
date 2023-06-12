@@ -18,4 +18,6 @@
     <string name="Back">Back</string>
     <string name="Take_a_Photo">Take a photo</string>
     <string name="Choose_from_Gallery">Choose from gallery</string>
+    <string name="inputYourName">Type your name here</string>
+    <string name="inputYourDescription">Type your Profile Description here!</string>
 </resources>
