@@ -127,6 +127,11 @@ class ProfileEditFragment : Fragment() {
             val userDescription = userDescriptionEditText.text.toString()
             val userAccountCreationTime = user.metadata?.creationTimestamp.toString()
 
+            if (userName.isBlank() || userDescription.isBlank()) {
+                Toast.makeText(context, "Please fill out all the fields", Toast.LENGTH_SHORT).show()
+                return
+            }
+
             val userMap = mapOf<String, String>(
                 "userId" to userId,
                 "userName" to userName,
