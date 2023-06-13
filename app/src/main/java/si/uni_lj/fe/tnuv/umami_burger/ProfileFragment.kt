@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
@@ -56,9 +57,10 @@ class ProfileFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private var databaseReference: DatabaseReference? = null
 
-    private lateinit var burgerPosts: List<BurgerPost>
     private lateinit var recyclerView: RecyclerView
+    private val burgerPosts: MutableList<BurgerPost> = mutableListOf()
 
 
     private val signInLauncher = registerForActivityResult(FirebaseAuthUIActivityResultContract()) { result ->
@@ -79,6 +81,8 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("Posts")
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
 
         signoutButton = view.findViewById(R.id.btnSignout)
@@ -106,76 +110,7 @@ class ProfileFragment : Fragment() {
                 .commit()
         }
 
-        // Define your burgerPosts here
-        burgerPosts = listOf(
-            BurgerPost(
-                nameOfPerson = "John Doe",
-                wordReview = "This burger was amazing!",
-                numberOfLikes = 5,
-                numberOfComments = 3,
-                comments = listOf(
-                    BurgerPost.Comment(
-                        commenterName = "Jane Smith",
-                        comment = "Delicious burger!",
-                        commentTimestamp = System.currentTimeMillis() - 10_000
-                    ),
-                    BurgerPost.Comment(
-                        commenterName = "Bob Baker",
-                        comment = "Wow, looks amazing.",
-                        commentTimestamp = System.currentTimeMillis() - 5_000
-                    )
-                ),
-                location = BurgerPost.Location(
-                    coordinates = Pair(48.8566, 2.3522),
-                    placeId = "ChIJD7fiBh9u5kcRYJSMaMOCCwQ"
-                ),
-                nameOfBurger = "Classic Cheeseburger",
-                priceOfBurger = 7.99f,
-                postTimestamp = System.currentTimeMillis(),
-                ratingScore = BurgerPost.RatingScore(
-                    pattyRating = 4.2f,
-                    veggieRating = 3.7f,
-                    sauceRating = 4.5f,
-                    overallRating = 4.0f,
-                    calculatedRating = 4.1f
-                ),
-                reviewID = 123
-            ),
-            BurgerPost(
-                nameOfPerson = "John Doe",
-                wordReview = "This burger was amazing!",
-                numberOfLikes = 5,
-                numberOfComments = 3,
-                comments = listOf(
-                    BurgerPost.Comment(
-                        commenterName = "Jane Smith",
-                        comment = "Delicious burger!",
-                        commentTimestamp = System.currentTimeMillis() - 10_000
-                    ),
-                    BurgerPost.Comment(
-                        commenterName = "Bob Baker",
-                        comment = "Wow, looks amazing.",
-                        commentTimestamp = System.currentTimeMillis() - 5_000
-                    )
-                ),
-                location = BurgerPost.Location(
-                    coordinates = Pair(48.8566, 2.3522),
-                    placeId = "ChIJD7fiBh9u5kcRYJSMaMOCCwQ"
-                ),
-                nameOfBurger = "Classic Cheeseburger",
-                priceOfBurger = 7.99f,
-                postTimestamp = System.currentTimeMillis(),
-                ratingScore = BurgerPost.RatingScore(
-                    pattyRating = 4.2f,
-                    veggieRating = 3.7f,
-                    sauceRating = 4.5f,
-                    overallRating = 4.0f,
-                    calculatedRating = 4.1f
-                ),
-                reviewID = 123
-            )
-            // add more BurgerPost instances here
-        )
+
 
         recyclerView = view.findViewById(R.id.recycler_view_profile_posts)
         recyclerView.layoutManager = LinearLayoutManager(context)
@@ -206,6 +141,7 @@ class ProfileFragment : Fragment() {
             // user already signed in, update UI
             // ...
             fetchUserInfo()
+            fetchUserPosts()
         }
     }
 
@@ -249,16 +185,22 @@ class ProfileFragment : Fragment() {
                         val userName = snapshot.child("userName").value.toString()
                         val userDescription = snapshot.child("userDescription").value.toString()
                         val imageUrl = snapshot.child("profileImage").value.toString()
-                        val timestamp = snapshot.child("userAccountCreationTime").value.toString().toLong()
+                        val timestampString = snapshot.child("userAccountCreationTime").value.toString()
+                        val timestamp = try {
+                            timestampString.toLong()
+                        } catch (e: NumberFormatException) {
+                            Log.e("ProfileFragment", "Failed to convert $timestampString to Long", e)
+                            0L
+                        }
                         val date = Date(timestamp)
                         val format = SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault())
                         val userAccountCreationTime = format.format(date)
                         displayNameTextView.text = userName
                         descriptionTextView.text = userDescription
                         postTimeTextView.text = userAccountCreationTime
-                        // Here you need to handle the image URL and display it on imageView
-                        // I am not sure how you handle images, so I will leave this part empty
 
+
+                        //handling images with glide:
                         context?.let { it1 -> Glide.with(it1).load(imageUrl).into(avatarImageView) }
                     }
                 }
@@ -269,4 +211,62 @@ class ProfileFragment : Fragment() {
             })
         }
     }
+
+    private fun fetchUserPosts() {
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+        databaseReference?.orderByChild("userId")?.equalTo(currentUserId)?.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                burgerPosts.clear()
+                for (postSnapshot in snapshot.children) {
+                    val post = postSnapshot.getValue(BurgerPost::class.java)
+                    if (post != null) {
+                        fetchUserForPost(post)
+                    }
+                }
+                recyclerView.adapter?.notifyDataSetChanged() // Make sure to notify adapter of data change
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(context, "Failed to fetch posts!", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+
+    private fun fetchUserForPost(post: BurgerPost) {
+        val usersReference = FirebaseDatabase.getInstance().getReference("Users")
+        usersReference.child(post.userId).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+
+                    val userName = snapshot.child("userName").value.toString()
+                    val userDescription = snapshot.child("userDescription").value.toString()
+                    val imageUrl = snapshot.child("profileImage").value.toString()
+                    val timestampString = snapshot.child("userAccountCreationTime").value.toString()
+                    val timestamp = try {
+                        timestampString.toLong()
+                    } catch (e: NumberFormatException) {
+                        Log.e("ProfileFragment", "Failed to convert $timestampString to Long", e)
+                        0L
+                    }
+
+                    // Create a new user object with the fetched data
+                    val user = User(post.userId, userName, userDescription, imageUrl, timestamp)
+
+                    // Assign the new user to the post
+                    post.user = user
+
+                    burgerPosts.add(post)
+                    recyclerView.adapter?.notifyDataSetChanged()
+                } else {
+                    Toast.makeText(context, "Failed to fetch user for post!", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(context, "Failed to fetch user for post!", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
 }

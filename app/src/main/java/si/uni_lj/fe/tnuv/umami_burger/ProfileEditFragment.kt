@@ -121,6 +121,11 @@ class ProfileEditFragment : Fragment() {
 
     private fun saveUserDetails(imageUrl: String) {
         val user = FirebaseAuth.getInstance().currentUser
+        if (user == null) {
+            Toast.makeText(context, "User not authenticated", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         user?.let {
             val userId = user.uid
             val userName = userNameEditText.text.toString()

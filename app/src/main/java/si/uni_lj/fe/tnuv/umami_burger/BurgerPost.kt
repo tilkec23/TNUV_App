@@ -1,34 +1,26 @@
 package si.uni_lj.fe.tnuv.umami_burger
 
+
 data class BurgerPost(
-    val nameOfPerson: String,
-    val wordReview: String,
-    val numberOfLikes: Int,
-    val numberOfComments: Int,
-    val comments: List<Comment>,
-    val location: Location,
-    val nameOfBurger: String,
-    val priceOfBurger: Float,
-    val postTimestamp: Long,
-    val ratingScore: RatingScore,
-    val reviewID: Int
-) {
-    data class Comment(
-        val commenterName: String,
-        val comment: String,
-        val commentTimestamp: Long
-    )
+    val userId: String = "",
+    var user: User? = null,
+    val burgerName: String = "",
+    val burgerPrice: Float = 0.0f,
+    val burgerPlace: String = "",
+    val burgerPattyRating: Float = 0.0f,
+    val burgerVeggiesRating: Float = 0.0f,
+    val burgerSauceRating: Float = 0.0f,
+    val burgerOverallRating: Float = 0.0f,
+    val imageUrl: String = "",
+    val timestamp: Long = 0L,
+    val numberOfLikes: Int = 0,
+    val comments: List<UserComment> = emptyList(),
+    val nameOfPerson: String = "",
+    val wordReview: String = ""
+)
 
-    data class Location(
-        val coordinates: Pair<Double, Double>,
-        val placeId: String
-    )
-
-    data class RatingScore(
-        val pattyRating: Float,
-        val veggieRating: Float,
-        val sauceRating: Float,
-        val overallRating: Float,
-        val calculatedRating: Float
-    )
-}
+data class UserComment(
+    val userId: String,
+    val text: String,
+    val timestamp: Long
+)
