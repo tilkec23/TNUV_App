@@ -1,5 +1,6 @@
 package si.uni_lj.fe.tnuv.umami_burger
 
+import android.graphics.Paint
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -86,6 +87,8 @@ class LoginFragment : Fragment() {
 
         }
 
+
+        registerButton.paintFlags = registerButton.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         registerButton.setOnClickListener {
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
             transaction.replace(R.id.frame_layout, RegisterFragment()) // replace 'fragment_container' with the id of your fragment container.
@@ -130,7 +133,7 @@ class LoginFragment : Fragment() {
                     val user = auth.currentUser
                     // Here you could use a method updateUI(user) as in your original function
                     // Switch to the profile fragment
-                    val profileFragment = ProfileFragment.newInstance("", "")  // replace with your parameters
+                    val profileFragment = ProfileFragment.newInstance()  // replace with your parameters
                     parentFragmentManager.beginTransaction()
                         .replace(R.id.frame_layout, profileFragment)  // replace with your container view ID
                         .commit()

@@ -23,6 +23,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
@@ -55,12 +56,16 @@ private lateinit var descriptionTextView: TextView
 
 class ProfileFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
     private var databaseReference: DatabaseReference? = null
+
+
 
     private lateinit var recyclerView: RecyclerView
     private val burgerPosts: MutableList<BurgerPost> = mutableListOf()
+    private var allPostsFetched = false
+
+
 
 
     private val signInLauncher = registerForActivityResult(FirebaseAuthUIActivityResultContract()) { result ->
@@ -68,13 +73,12 @@ class ProfileFragment : Fragment() {
         // ...
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    //override fun onCreate(savedInstanceState: Bundle?) {
+      //  super.onCreate(savedInstanceState)
+        //arguments?.let {
+
+        //}
+    //}
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -82,8 +86,10 @@ class ProfileFragment : Fragment() {
     ): View? {
 
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Posts")
+
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("Posts")
 
         signoutButton = view.findViewById(R.id.btnSignout)
         btnEditProfile = view.findViewById<Button>(R.id.btnEditProfile)
@@ -92,6 +98,8 @@ class ProfileFragment : Fragment() {
         displayNameTextView = view.findViewById(R.id.display_name_text_view)
         postTimeTextView = view.findViewById(R.id.post_time_text_view)
         descriptionTextView = view.findViewById(R.id.description_textview)
+
+
 
 
         signoutButton.setOnClickListener {
@@ -113,10 +121,28 @@ class ProfileFragment : Fragment() {
 
 
         recyclerView = view.findViewById(R.id.recycler_view_profile_posts)
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = BurgerPostAdapter(burgerPosts)
+        val linearLayoutManager = LinearLayoutManager(context)
+        linearLayoutManager.reverseLayout = true
+        linearLayoutManager.stackFromEnd = true
+        recyclerView.layoutManager = linearLayoutManager
+        recyclerView.adapter = BurgerPostAdapter(burgerPosts, allPostsFetched)
 
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
 
+                val totalItemCount = linearLayoutManager.itemCount
+                val lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition()
+
+                // load more posts if we've scrolled to the bottom of the list
+                if (totalItemCount <= (lastVisibleItemPosition + 2)) {
+                    loadMorePosts()
+                }
+            }
+        })
+
+        fetchUserInfo()
+        fetchUserPosts()
 
 
 
@@ -127,52 +153,37 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        avatarImageView = view.findViewById(R.id.avatar_image_view)
-        displayNameTextView = view.findViewById(R.id.display_name_text_view)
-        postTimeTextView = view.findViewById(R.id.post_time_text_view)
-        descriptionTextView = view.findViewById(R.id.description_textview)
+
 
         // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = FirebaseAuth.getInstance().currentUser
         if(currentUser == null) {
             // not signed in, start sign in process
-            startSignIn()
+            // switch to log in fragment
+            val loginFragment = LoginFragment.newInstance("", "")  // replace with your parameters
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.frame_layout, loginFragment)  // replace with your container view ID
+                .commit()
         } else {
             // user already signed in, update UI
             // ...
-            fetchUserInfo()
-            fetchUserPosts()
+
+
         }
     }
 
-    private fun startSignIn() {
-        val signInIntent = AuthUI.getInstance()
-            .createSignInIntentBuilder()
-            // ... options ...
-            .build()
 
-        signInLauncher.launch(signInIntent)
-    }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ProfileFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ProfileFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        fun newInstance() = FeedFragment()
+
+        // item types for the RecyclerView
+        const val VIEW_TYPE_POST = 0
+        const val VIEW_TYPE_END = 1
     }
+
+    private var lastKey: String = Long.MAX_VALUE.toString()
     private fun fetchUserInfo() {
         val user = FirebaseAuth.getInstance().currentUser
         user?.let {
@@ -214,31 +225,68 @@ class ProfileFragment : Fragment() {
 
     private fun fetchUserPosts() {
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
-        databaseReference?.orderByChild("userId")?.equalTo(currentUserId)?.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                burgerPosts.clear()
-                for (postSnapshot in snapshot.children) {
+
+        var query: Query? = databaseReference?.orderByChild("userId")?.equalTo(currentUserId)?.limitToLast(10)
+
+        // if lastKey is not the maximum value, a page of data has already been loaded, so get the next one
+        if (lastKey != Long.MAX_VALUE.toString()) {
+            query = databaseReference?.orderByChild("timestamp")?.endAt(lastKey)?.limitToLast(11)
+        }
+
+        query?.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val newPosts = mutableListOf<BurgerPost>()
+
+                for (postSnapshot in dataSnapshot.children) {
                     val post = postSnapshot.getValue(BurgerPost::class.java)
                     if (post != null) {
-                        fetchUserForPost(post)
+                        // Get likes
+                        for (likeSnapshot in postSnapshot.child("likes").children) {
+                            val userId = likeSnapshot.key
+                            val liked = likeSnapshot.getValue(Boolean::class.java) ?: false
+                            if (userId != null && liked) {
+                                post.likes[userId] = true
+                            }
+                        }
+
+                        post.numberOfLikes = post.likes.size
+                        newPosts.add(post)
+                        fetchUserForPost(post, newPosts)
                     }
                 }
-                recyclerView.adapter?.notifyDataSetChanged() // Make sure to notify adapter of data change
+
+                // remove the extra post if this isn't the first page of data
+                if (lastKey != Long.MAX_VALUE.toString()) {
+                    newPosts.removeAt(newPosts.size - 1)
+                }
+
+                // if the fetched list size is less than the limit, there are no more posts to load
+                if (newPosts.size < 10) {
+                    allPostsFetched = true
+                }
+
+                // get the key for the next page of data
+                if (newPosts.size > 0) {
+                    lastKey = newPosts[newPosts.size - 1].timestamp.toString()
+                }
+
+                // add newPosts to the start of the list because of Firebase's reverse ordering
+                burgerPosts.addAll(0, newPosts)
             }
 
-            override fun onCancelled(error: DatabaseError) {
+            override fun onCancelled(databaseError: DatabaseError) {
                 Toast.makeText(context, "Failed to fetch posts!", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
 
-    private fun fetchUserForPost(post: BurgerPost) {
+
+    private fun fetchUserForPost(post: BurgerPost, newPosts: MutableList<BurgerPost>) {
         val usersReference = FirebaseDatabase.getInstance().getReference("Users")
         usersReference.child(post.userId).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-
                     val userName = snapshot.child("userName").value.toString()
                     val userDescription = snapshot.child("userDescription").value.toString()
                     val imageUrl = snapshot.child("profileImage").value.toString()
@@ -256,8 +304,10 @@ class ProfileFragment : Fragment() {
                     // Assign the new user to the post
                     post.user = user
 
-                    burgerPosts.add(post)
-                    recyclerView.adapter?.notifyDataSetChanged()
+                    // Only call notifyDataSetChanged() once, after all posts have been fetched
+                    if (newPosts.size == burgerPosts.size) {
+                        recyclerView.adapter?.notifyDataSetChanged()
+                    }
                 } else {
                     Toast.makeText(context, "Failed to fetch user for post!", Toast.LENGTH_SHORT).show()
                 }
@@ -267,6 +317,12 @@ class ProfileFragment : Fragment() {
                 Toast.makeText(context, "Failed to fetch user for post!", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    fun loadMorePosts() {
+        if(!allPostsFetched){
+            fetchUserPosts()
+        }
     }
 
 }

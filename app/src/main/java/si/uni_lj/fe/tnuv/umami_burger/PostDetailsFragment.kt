@@ -12,6 +12,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ServerValue
 import com.google.firebase.storage.FirebaseStorage
+import si.uni_lj.fe.tnuv.umami_burger.FeedFragment
+import si.uni_lj.fe.tnuv.umami_burger.ProfileFragment
 import si.uni_lj.fe.tnuv.umami_burger.R
 import java.util.UUID
 
@@ -103,6 +105,8 @@ class PostDetailsFragment : Fragment() {
                 Toast.makeText(context, "User not logged in", Toast.LENGTH_SHORT).show()
                 return
             }
+            val title = UUID.randomUUID().toString()
+
 
             val postMap = mapOf<String, Any>(
                 "userId" to userId,
@@ -114,13 +118,19 @@ class PostDetailsFragment : Fragment() {
                 "burgerSauceRating" to burgerSauceRating,
                 "burgerOverallRating" to burgerOverallRating,
                 "imageUrl" to imageUrl,
-                "timestamp" to ServerValue.TIMESTAMP
+                "timestamp" to ServerValue.TIMESTAMP,
+                "title" to title
             )
 
-            val dbRef = FirebaseDatabase.getInstance().getReference("Posts/${UUID.randomUUID()}")
+            val dbRef = FirebaseDatabase.getInstance().getReference("Posts/${title}")
             dbRef.setValue(postMap)
                 .addOnSuccessListener {
                     Toast.makeText(context, "Burger post saved successfully!", Toast.LENGTH_SHORT).show()
+
+                    val feedFragment = FeedFragment.newInstance()  // replace with your parameters
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.frame_layout, feedFragment)  // replace with your container view ID
+                        .commit()
                 }
                 .addOnFailureListener {
                     Toast.makeText(context, "Failed to save burger post!", Toast.LENGTH_SHORT).show()
@@ -135,3 +145,24 @@ class PostDetailsFragment : Fragment() {
         }
     }
 }
+/*⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣠⡤⠶⠶⠚⠛⠛⠻⠿⢷⣶⡶⢾⣿⢿⣿⣷⣶⣶⣤⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⠶⠛⠉⠀⡀⠴⣏⡧⠐⠚⢛⡛⠓⠺⣿⣮⡿⠦⢤⡀⠀⠈⣭⠉⠛⠻⠷⣦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⣠⣶⠟⠉⣤⡄⠀⣠⡛⠃⢠⣦⡄⠀⠀⡛⠛⠀⠰⠿⠟⢧⡀⠀⠻⠦⠀⠀⠀⠶⠀⢠⣦⡙⢿⣶⡄⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⣠⡾⠋⠑⠀⠀⠉⠀⠐⠟⠁⢀⣤⡉⠀⠀⠸⢿⠂⠀⣶⡦⠀⠘⠇⠀⠀⠰⠆⠀⣠⣤⡀⠀⠉⠀⠀⠙⣿⣆⠀⠀⠀⠀⠀
+⠀⠀⠀⢀⣼⡟⠁⠀⠀⠰⠀⠀⠀⠀⠀⠀⠀⠉⢁⣤⡀⠀⣀⠀⠀⢀⣠⡀⠀⠀⢰⣶⠀⠀⠀⠈⠉⠀⠀⠀⠼⠏⠀⠈⠻⣦⠀⠀⠀⠀
+⠀⠀⢀⣿⠏⡀⠀⠀⠀⠀⠀⠀⠀⠘⠛⠀⠀⣀⡈⠉⠀⠀⠋⠁⠀⠈⠉⠁⠀⠀⠀⠁⠀⠰⠟⠀⠀⠀⠰⠆⠀⠀⠀⠄⠀⠘⢧⠀⠀⠀
+⠀⠀⣾⡟⢠⠇⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠁⠀⠀⠘⠛⠃⠀⠀⠀⢰⡆⠀⠀⠀⠀⠀⠀⠠⣤⠄⠀⢀⠀⠀⠀⠀⠀⠀⠈⣧⠀⠀
+⠀⠀⣿⣇⠈⣧⡟⣆⢘⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⢹⡄⠀
+⠀⠀⠘⣿⣦⣌⣁⠈⠚⠷⢽⣮⣦⣄⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⠃⠀
+⠀⢀⣤⠾⢋⠈⠉⠛⠳⠦⣤⣀⡉⠉⠉⠒⠛⠷⢶⡤⠤⠤⠤⠤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⡀⠤⠴⠶⢾⣿⣅⠀⠀
+⣴⣿⠿⢿⣿⠃⡀⠀⠀⠀⣀⠈⠉⠛⠒⠲⣦⣤⡤⠤⠤⠤⠤⠤⠤⠤⠤⠴⠶⠖⠲⠶⣶⣒⠛⠛⠋⠉⠉⠀⠀⠀⠀⠀⢀⣀⣈⣻⣿⣦
+⠀⠀⠀⠚⠛⣻⡇⠀⣴⣏⣙⣷⠦⠶⠶⣟⠉⠀⠀⠀⠀⢠⡤⠤⣤⣀⠀⠀⠀⣤⢶⣄⣠⡭⠿⢶⣄⠀⢀⣤⠶⠶⢦⡤⠼⣿⡏⠉⠙⠻
+⠀⠀⠀⢠⣴⣿⣷⣶⣿⣤⣉⡙⠛⠒⠒⠛⠛⣿⡄⢀⣤⠾⠤⠤⠖⠛⢷⣤⣼⣿⠶⣭⣄⣀⣀⢀⣸⣾⣋⣀⣀⣤⡤⣶⣿⣿⣅⠀⠀⠀
+⠀⠀⠀⢿⣿⣿⣿⣿⣻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⣀⠀⠀⠀⠀⠀⠀⢀⣠⠴⢚⣽⣿⣿⣿⣿⣿⣿⡿⠻⠙⠋⠉⠘⣿⡄⠀⠀
+⠀⠀⠀⣸⣿⣿⣿⣿⣿⣟⣿⣿⣿⡟⢻⣏⣹⢻⣿⢻⣻⣿⣿⣦⠀⣀⣀⡴⠞⣋⣤⣶⡿⣿⠋⠳⣞⢁⡠⠁⠀⠀⠀⠀⠀⢀⣿⡇⠀⠀
+⠀⠀⠀⠘⣿⣿⣿⣿⣿⣿⣿⣿⣖⢻⣿⣿⣿⣿⣿⣻⣿⣿⣿⡿⣧⣭⣵⠖⠋⢩⣽⢁⣀⠻⠀⢤⣤⠿⠤⠖⣦⣷⣂⣠⣴⣾⣟⠃⠀⠀
+⠀⠀⠀⣾⡟⢿⣄⣈⣽⡿⠿⠟⠛⠿⣿⣿⣿⣿⣿⣿⣹⣯⣿⣤⣾⣚⣿⣲⣿⣚⣧⣤⣿⣾⣷⣾⣿⣾⣟⣋⡉⠉⠉⣿⠀⠙⣿⡄⠀⠀
+⠀⠀⠀⣿⡆⣆⠀⠀⠀⠀⠀⠀⠀⠀⠉⠙⢷⡄⠀⠉⠉⣉⡽⠛⠋⠙⠛⠿⣤⣤⠴⠟⠋⠁⠀⠀⠀⠀⠀⠈⠉⠛⠒⠛⠀⠀⢹⡇⠀⠀
+⠀⠀⠀⢿⣷⢻⣿⣆⢠⡀⠀⡀⠀⠀⠀⠀⠀⠙⠳⠶⠞⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⡇⠀⠀
+⠀⠀⠀⠘⢿⣦⣍⡛⠦⣷⣀⠳⣀⠈⠳⣄⠀⠀⣀⢀⣀⣀⣀⣀⣀⣀⣀⠀⠀⢀⣀⣀⣀⣀⡠⠤⠀⠀⠀⠀⠀⠀⠀⢀⣠⣴⠟⠀⠀⠀
+⠀⠀⠀⠀⠀⠉⠙⠛⠻⠷⣶⣶⣾⣽⣷⣦⣤⣀⣈⣉⣉⣁⣀⣀⣀⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣶⡶⠶⠶⠶⠒⠚⠋⠉⠁⠀⠀⠀⠀⠀*/

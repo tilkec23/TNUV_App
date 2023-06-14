@@ -1,5 +1,6 @@
 package si.uni_lj.fe.tnuv.umami_burger
 
+import android.graphics.Paint
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -18,6 +19,7 @@ import com.google.common.hash.Hashing
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import java.nio.charset.StandardCharsets
+
 
 /**
  * A simple [Fragment] subclass.
@@ -139,6 +141,7 @@ class RegisterFragment : Fragment() {
             // Perform actions with the entered text
         }
 
+        loginButton.paintFlags = loginButton.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         loginButton.setOnClickListener {
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
             transaction.replace(R.id.frame_layout, LoginFragment()) // replace 'fragment_container' with the id of your fragment container.

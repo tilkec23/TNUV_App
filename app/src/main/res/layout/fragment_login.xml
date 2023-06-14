@@ -73,7 +73,8 @@
             android:text="@string/looking_for_register"
             android:paddingTop="30dp"
             android:textAllCaps="false"
-            android:textColor="@color/secondary_text_color"
+            android:textColor="@color/hyperlink_color"
+            android:textStyle="bold"
             android:background="@drawable/transparent_background">
         </Button>
 

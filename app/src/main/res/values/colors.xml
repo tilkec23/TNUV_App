@@ -20,4 +20,5 @@
     <color name="status_bar_color">#e86434</color>
     <color name="unsuccessful">#BC0D0D</color>
     <color name="successful">#0D8E0D</color>
+    <color name="hyperlink_color">#1F00A6</color>
 </resources>

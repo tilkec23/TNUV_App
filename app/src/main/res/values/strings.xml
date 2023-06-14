@@ -3,16 +3,15 @@
     <string name="napaka_omrezje">Omrežje ni na voljo.</string>
     <string name="napaka_povezava">Vzpostavitev povezave s strežnikom ni uspela.</string>
     <string name="urlNaslov">http://www.lait.fe.uni-lj.si/gradiva/tnuv/contacts.json</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="empty_feed">Your feed is empty</string>
     <string name="empty_feed_description">Try adding friends or create a post!</string>
     <string name="Login">Login</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="looking_for_register">Don\'t have an account yet? Register here!</string>
+    <string name="looking_for_register">Don\'t have an account yet? Click HERE to register!</string>
     <string name="Register">Register</string>
-    <string name="looking_for_login">Already have an account? Click here to log in!</string>
+    <string name="looking_for_login">Already have an account? Click HERE to log in!</string>
     <string name="confirm_password">Re-enter your password</string>
     <string name="Sign_Out">Sign out</string>
     <string name="Back">Back</string>
@@ -20,4 +19,6 @@
     <string name="Choose_from_Gallery">Choose from gallery</string>
     <string name="inputYourName">Type your name here</string>
     <string name="inputYourDescription">Type your Profile Description here!</string>
+    <string name="end_of_list">You\'ve reached the end of posts, there is no more burger reviews left to show!</string>
+    <string name="action_your_review">Melon Susk has liked your review!</string>
 </resources>

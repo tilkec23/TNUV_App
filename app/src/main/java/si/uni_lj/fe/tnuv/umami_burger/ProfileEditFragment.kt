@@ -149,6 +149,11 @@ class ProfileEditFragment : Fragment() {
             dbRef.setValue(userMap)
                 .addOnSuccessListener {
                     Toast.makeText(context, "User details saved successfully!", Toast.LENGTH_SHORT).show()
+
+                    val profileFragment = ProfileFragment.newInstance()  // replace with your parameters
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.frame_layout, profileFragment)  // replace with your container view ID
+                        .commit()
                 }
                 .addOnFailureListener {
                     Toast.makeText(context, "Failed to save user details!", Toast.LENGTH_SHORT).show()

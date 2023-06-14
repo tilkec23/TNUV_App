@@ -57,7 +57,11 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_notifications -> {
                     binding.bottomNavigationView.menu.setGroupCheckable(0, true, true)
-                    replaceFragment(NotificationsFragment(), "NotificationsFragment")
+                    val currentUser = auth.currentUser // retrieve the current user here
+                    if (currentUser == null) {
+                        replaceFragment(LoginFragment(), "NotificationsFragment")
+                    } else
+                        replaceFragment(ProfileFragment(), "ActualNotificationsFragment")
                 }
 
                 else -> false

@@ -13,10 +13,14 @@ data class BurgerPost(
     val burgerOverallRating: Float = 0.0f,
     val imageUrl: String = "",
     val timestamp: Long = 0L,
-    val numberOfLikes: Int = 0,
+    var numberOfLikes: Int = 0,
     val comments: List<UserComment> = emptyList(),
     val nameOfPerson: String = "",
-    val wordReview: String = ""
+    val wordReview: String = "",
+    val isEndIndicator: Boolean = false,
+    var isLiked: Boolean = false,
+    var likes: MutableMap<String, Boolean> = HashMap(),
+    val title: String = ""
 )
 
 data class UserComment(
