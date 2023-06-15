@@ -9,6 +9,10 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/burger"
@@ -19,6 +23,13 @@
         android:name=".MyApp"
         >
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyA0g03W4-cIA1GdP5sGcZYPm7z1nQ-DcA4"/>
+
+        <meta-data
+            android:name="com.google.android.libraries.places.API_KEY"
+            android:value="AIzaSyA0g03W4-cIA1GdP5sGcZYPm7z1nQ-DcA4"/>
 
 
         <activity

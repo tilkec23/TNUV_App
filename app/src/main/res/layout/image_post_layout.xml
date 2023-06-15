@@ -149,6 +149,7 @@
                 android:layout_marginStart="24dp"
                 android:drawablePadding="12dp"
                 android:padding="8dp"
+                android:textSize="8dp"
                 android:gravity="center_vertical"
                 android:textColor="@color/secondary_text_color"
                 app:drawableStartCompat="@drawable/baseline_comment_24"

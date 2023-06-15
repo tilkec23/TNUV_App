@@ -91,14 +91,14 @@ class PostDetailsFragment : Fragment() {
             val burgerName = burgerNameEditText.text.toString()
             val burgerPlace = burgerPlaceEditText.text.toString()
             val burgerPrice = isValidFloat(burgerPriceEditText.text.toString())
-            val burgerPattyRating = isValidFloat(burgerPattyRatingEditText.text.toString())
-            val burgerVeggiesRating = isValidFloat(burgerVeggiesRatingEditText.text.toString())
-            val burgerSauceRating = isValidFloat(burgerSauceRatingEditText.text.toString())
-            val burgerOverallRating = isValidFloat(burgerOverallRatingEditText.text.toString())
+            val burgerPattyRating = isValidRating(burgerPattyRatingEditText.text.toString())
+            val burgerVeggiesRating = isValidRating(burgerVeggiesRatingEditText.text.toString())
+            val burgerSauceRating = isValidRating(burgerSauceRatingEditText.text.toString())
+            val burgerOverallRating = isValidRating(burgerOverallRatingEditText.text.toString())
 
             if (burgerName.isBlank() || burgerPlace.isBlank() || burgerPrice == null || burgerPattyRating == null
                 || burgerVeggiesRating == null || burgerSauceRating == null || burgerOverallRating == null) {
-                Toast.makeText(context, "Please fill out all the fields and ensure ratings are numeric", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Please fill out all the fields and ensure ratings are between 1 and 10!", Toast.LENGTH_SHORT).show()
                 return
             }
             if (userId == null) {
@@ -144,6 +144,19 @@ class PostDetailsFragment : Fragment() {
             null
         }
     }
+    private fun isValidRating(input: String): Float? {
+        return try {
+            val number = input.toFloat()
+            if (number in 0.0..10.0) {
+                number
+            } else {
+                null
+            }
+        } catch (e: NumberFormatException) {
+            null
+        }
+    }
+
 }
 /*⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣠⡤⠶⠶⠚⠛⠛⠻⠿⢷⣶⡶⢾⣿⢿⣿⣷⣶⣶⣤⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⠶⠛⠉⠀⡀⠴⣏⡧⠐⠚⢛⡛⠓⠺⣿⣮⡿⠦⢤⡀⠀⠈⣭⠉⠛⠻⠷⣦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀

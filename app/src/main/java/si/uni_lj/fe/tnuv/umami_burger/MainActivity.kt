@@ -1,5 +1,6 @@
 package si.uni_lj.fe.tnuv.umami_burger
 
+import MapsFragment
 import NewPostFragment
 import android.os.Bundle
 import android.view.WindowManager
@@ -53,7 +54,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_nearby -> {
                     binding.bottomNavigationView.menu.setGroupCheckable(0, true, true)
-                    replaceFragment(NearbyFragment(), "NearbyFragment")
+                    replaceFragment(MapsFragment(), "MapsFragment")
                 }
                 R.id.nav_notifications -> {
                     binding.bottomNavigationView.menu.setGroupCheckable(0, true, true)
