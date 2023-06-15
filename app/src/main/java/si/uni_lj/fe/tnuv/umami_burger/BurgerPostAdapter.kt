@@ -89,7 +89,7 @@ class BurgerPostAdapter(private val burgerPosts: List<BurgerPost>, private val a
 
             holder.descriptionTextView.text = burgerPost.burgerName
             holder.likeCountTextView.text = "${burgerPost.numberOfLikes} likes"
-            holder.commentCountTextView.text = "${burgerPost.comments.size} comments"
+            holder.commentCountTextView.text = "Comments are disabled"
             holder.ratingCountTextView.text = listOf(burgerPost.burgerOverallRating, burgerPost.burgerPattyRating, burgerPost.burgerVeggiesRating, burgerPost.burgerSauceRating).average().toString()
 
 

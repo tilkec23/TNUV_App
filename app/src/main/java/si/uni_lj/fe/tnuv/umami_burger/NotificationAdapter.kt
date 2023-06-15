@@ -1,64 +1,50 @@
 package si.uni_lj.fe.tnuv.umami_burger
 
+import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
-class NotificationsAdapter(private val notifications: List<Notification>) : RecyclerView.Adapter<NotificationsAdapter.NotificationViewHolder>() {
+class NotificationAdapter(
+    private val context: Context,
+    private val notifications: List<Notification>
+) : RecyclerView.Adapter<NotificationAdapter.ViewHolder>() {
 
-    class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val titleTextView: TextView = itemView.findViewById(R.id.notification_title)
-        val contentTextView: TextView = itemView.findViewById(R.id.notification_content)
-        val timeTextView: TextView = itemView.findViewById(R.id.notification_time)
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val avatarImageView: ImageView = itemView.findViewById(R.id.avatar_image_view)
+        val displayNameTextView: TextView = itemView.findViewById(R.id.display_name_text_view)
+        val postTimeTextView: TextView = itemView.findViewById(R.id.post_time_text_view)
+        val itemGalleryPostImageView: ImageView = itemView.findViewById(R.id.item_gallery_post_image_imageview)
+        val notificationAlertTextView: TextView = itemView.findViewById(R.id.notification_alert)
+        // ... other views ...
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.notification_post_layout, parent, false)
-        return NotificationViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_item, parent, false)
+
+        return ViewHolder(view)
     }
 
-    override fun getItemCount() = notifications.size
+    override fun getItemCount(): Int {
+        return notifications.size
+    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val notification = notifications[position]
 
-        // Load user avatar
-        Glide.with(holder.avatarImageView.context)
-            .load(notification.avatarUrl)
-            .into(holder.avatarImageView)
 
-        // Set username
-        holder.displayNameTextView.text = notification.displayName
-
-        // Format and display time of the like event
-        val formattedTime = formatTime(notification.likeEventTime)
-        holder.postTimeTextView.text = formattedTime
-
-        // Display who liked the post
-        val notificationText = "${notification.likerName} liked your post"
-        holder.notificationAlertTextView.text = notificationText
-
-        // Load post image
-        Glide.with(holder.postImageView.context)
-            .load(notification.postImageUrl)
-            .into(holder.postImageView)
-
-        // Set like count
-        holder.likeCountTextView.text = "${notification.likeCount} likes"
-
-        // Set comment count
-        holder.commentCountTextView.text = "${notification.commentCount} comments"
-
-        // Set rating
-        holder.ratingCountTextView.text = "${notification.rating}"
     }
-
-    private fun formatTime(timeInMillis: Long): String {
-        val date = Date(timeInMillis)
-        val format = SimpleDateFormat("h:mm a, dd MMMM yyyy", Locale.getDefault())
-        return format.format(date)
-    }
-
 }
+

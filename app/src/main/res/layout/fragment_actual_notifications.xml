@@ -42,7 +42,7 @@
                 android:paddingTop="200dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/recycler_view_profile_posts"
+                android:id="@+id/recycler_view_notifications_posts"
                 >
             </androidx.recyclerview.widget.RecyclerView>
 

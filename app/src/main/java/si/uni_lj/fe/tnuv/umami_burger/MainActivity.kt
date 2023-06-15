@@ -59,9 +59,9 @@ class MainActivity : AppCompatActivity() {
                     binding.bottomNavigationView.menu.setGroupCheckable(0, true, true)
                     val currentUser = auth.currentUser // retrieve the current user here
                     if (currentUser == null) {
-                        replaceFragment(LoginFragment(), "NotificationsFragment")
+                        replaceFragment(LoginFragment(), "LoginFragment")
                     } else
-                        replaceFragment(ProfileFragment(), "ActualNotificationsFragment")
+                        replaceFragment(ActualNotificationsFragment(), "ActualNotificationsFragment")
                 }
 
                 else -> false
