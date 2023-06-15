@@ -90,7 +90,8 @@ class BurgerPostAdapter(private val burgerPosts: List<BurgerPost>, private val a
             holder.descriptionTextView.text = burgerPost.burgerName
             holder.likeCountTextView.text = "${burgerPost.numberOfLikes} likes"
             holder.commentCountTextView.text = "Comments are disabled"
-            holder.ratingCountTextView.text = listOf(burgerPost.burgerOverallRating, burgerPost.burgerPattyRating, burgerPost.burgerVeggiesRating, burgerPost.burgerSauceRating).average().toString()
+            val average = listOf(burgerPost.burgerOverallRating, burgerPost.burgerPattyRating, burgerPost.burgerVeggiesRating, burgerPost.burgerSauceRating).average()
+            holder.ratingCountTextView.text = String.format("%.2f", average)
 
 
             // Set the like icon based on whether the user has liked the post or not

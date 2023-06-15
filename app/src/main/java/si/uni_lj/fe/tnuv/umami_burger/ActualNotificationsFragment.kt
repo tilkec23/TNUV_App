@@ -1,42 +1,26 @@
 package si.uni_lj.fe.tnuv.umami_burger
 
 import android.os.Bundle
-import android.text.format.DateUtils
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.firebase.ui.auth.AuthUI
-import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
-import com.google.android.material.imageview.ShapeableImageView
-import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
 import si.uni_lj.fe.tnuv.umami_burger.MyApp.Companion.auth
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-private lateinit var signoutButton: Button
+
+
 
 
 
@@ -55,7 +39,7 @@ class ActualNotificationsFragment : Fragment() {
     // TODO: Rename and change types of parameters
 
     private var databaseReference: DatabaseReference? = null
-
+    private lateinit var signoutButton: Button
 
 
     private lateinit var recyclerView: RecyclerView
@@ -65,17 +49,6 @@ class ActualNotificationsFragment : Fragment() {
 
 
 
-    private val signInLauncher = registerForActivityResult(FirebaseAuthUIActivityResultContract()) { result ->
-        // Handle the FirebaseAuthUIAuthenticationResult
-        // ...
-    }
-
-    //override fun onCreate(savedInstanceState: Bundle?) {
-    //  super.onCreate(savedInstanceState)
-    //arguments?.let {
-
-    //}
-    //}
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -160,14 +133,7 @@ class ActualNotificationsFragment : Fragment() {
 
 
 
-    companion object {
-        @JvmStatic
-        fun newInstance() = FeedFragment()
 
-        // item types for the RecyclerView
-        const val VIEW_TYPE_POST = 0
-        const val VIEW_TYPE_END = 1
-    }
 
     private var lastKey: String = Long.MAX_VALUE.toString()
 
@@ -186,6 +152,8 @@ class ActualNotificationsFragment : Fragment() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val newPosts = mutableListOf<BurgerPost>()
 
+
+
                 for (postSnapshot in dataSnapshot.children) {
                     val post = postSnapshot.getValue(BurgerPost::class.java)
                     if (post != null) {
@@ -200,6 +168,15 @@ class ActualNotificationsFragment : Fragment() {
 
                         post.numberOfLikes = post.likes.size
 
+                        // change the wordReview to string "Somebody liked your review"
+
+
+
+
+
+
+
+
 
                         // Check if the number of likes is greater than 0 before adding to the list
                         if (post.numberOfLikes > 0) {
@@ -209,6 +186,9 @@ class ActualNotificationsFragment : Fragment() {
                         }
                     }
                 }
+
+
+
 
                 // remove the extra post if this isn't the first page of data
                 if (lastKey != Long.MAX_VALUE.toString()) {
@@ -227,6 +207,12 @@ class ActualNotificationsFragment : Fragment() {
 
                 // add newPosts to the start of the list because of Firebase's reverse ordering
                 burgerPosts.addAll(0, newPosts)
+
+                if (burgerPosts.isEmpty()) {
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.frame_layout, NotificationsFragment())
+                        .commit()
+                }
             }
 
             override fun onCancelled(databaseError: DatabaseError) {

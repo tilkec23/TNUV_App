@@ -16,7 +16,7 @@ data class BurgerPost(
     var numberOfLikes: Int = 0,
     val comments: List<UserComment> = emptyList(),
     val nameOfPerson: String = "",
-    val wordReview: String = "",
+    var wordReview: String = "",
     val isEndIndicator: Boolean = false,
     var isLiked: Boolean = false,
     var likes: MutableMap<String, Boolean> = HashMap(),

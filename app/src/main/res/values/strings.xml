@@ -21,4 +21,6 @@
     <string name="inputYourDescription">Type your Profile Description here!</string>
     <string name="end_of_list">You\'ve reached the end of posts, there is no more burger reviews left to show!</string>
     <string name="action_your_review">Melon Susk has liked your review!</string>
+    <string name="no_one_liked">No one has liked any of your posts yet!</string>
+    <string name="no_notifications">Empty notifications?</string>
 </resources>
